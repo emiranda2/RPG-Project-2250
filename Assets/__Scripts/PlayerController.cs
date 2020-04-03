@@ -35,7 +35,25 @@ public class PlayerController : MonoBehaviour
     private bool _punching;
     private bool _kicking;
 
+    public float cooldownTime = 2;
 
+    private float nextFireTime = 0;
+
+    // Update is called once per frame
+    /*void Update()
+    {
+
+        if (Time.time > nextFireTime)
+        {
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                print("ability used, cooldown started");
+                nextFireTime = Time.time + cooldownTime;
+            }
+        }
+
+    }
+    */
     void Start()
     {
         // physics
@@ -87,18 +105,25 @@ public class PlayerController : MonoBehaviour
             _jumping = true;
         }
 
-        // punching
-        if (Input.GetKeyDown(KeyCode.Q) && _jumping == false && _kicking == false)
+        // punching with cooldown
+        if (Time.time > nextFireTime)
         {
-            Stop();
-            _punching = true;
+            if (Input.GetKeyDown(KeyCode.Q) && _jumping == false && _kicking == false)
+            {
+                Stop();
+                _punching = true;
+                nextFireTime = Time.time + cooldownTime;
+            }
         }
-        // kicking
-        if (Input.GetKeyDown(KeyCode.W) && _jumping == false && _punching == false) 
-        {
-            Stop();
-            _kicking = true;
-        }
+        // kicking with cooldown
+        if (Time.time > nextFireTime) { 
+            if (Input.GetKeyDown(KeyCode.W) && _jumping == false && _punching == false)
+            {
+                Stop();
+                _kicking = true;
+                nextFireTime = Time.time + cooldownTime;
+            }
+    }
 
         // UI
         //canvas.GetComponent<SliderJoint2D>();
@@ -136,7 +161,11 @@ public class PlayerController : MonoBehaviour
 
         }*/
     }
-    
+
+
+
+  
+
     // ------- Interactions ------------
     void SetFocus(Inter newFocus)
     {
